@@ -6,7 +6,7 @@
 </head>
 <div class="maindiv" id="container">
 <header>
-<h1>People Search</h1>
+<h1>Vehicle Search</h1>
 <nav class="navbar">
 <ul class= "navbar">
 <li><a href="index.html">People search</a></li>
@@ -18,27 +18,22 @@
 <body>
 <script>
 function checktheboxes() {
-    if((document.getElementById('name').value == "" && document.getElementById('license').value == "") || (document.getElementById('name').value != "" && document.getElementById('license').value != "")) {
+    if(document.getElementById('rego').value == "") {
         document.getElementById("message").innerHTML = "Error";
     }
     else {
-        if(document.getElementById('name').value == "") {
-            nextFunc2(fetchFunc());
-        }
-        else {
-            nextFunc(fetchFunc());
-        }
+        nextFunc(fetchFunc());
     }
 }
 function newdiv(dat) {
     let divnew = document.createElement("div");
-    let textnew = document.createTextNode(dat.PersonID + "\n" + dat.Name + "\n" + dat.Address + "\n" + dat.DOB + "\n" + dat.LicenseNumber + "\n" + dat.ExpiryDate);
+    let textnew = document.createTextNode(dat.VehicleID + "\n" + dat.Make + "\n" + dat.Model + "\n" + dat.Colour + "\n" + dat.OwnerID);
     divnew.appendChild(textnew);
     divnew.setAttribute("class", "newresultclass"); 
     document.getElementById("results").appendChild(divnew);
 }
 async function fetchFunc() {
-    const response = await fetch("https://ecdavunwuktrtytmtoge.supabase.co/rest/v1/People?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjZGF2dW53dWt0cnR5dG10b2dlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MzUyNDYsImV4cCI6MjA2MzUxMTI0Nn0.B8VOgHggV-9m4xnyJStP0woKGbhaBE_gqJlzcWT-EZk");
+    const response = await fetch("https://ecdavunwuktrtytmtoge.supabase.co/rest/v1/Vehicles?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjZGF2dW53dWt0cnR5dG10b2dlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MzUyNDYsImV4cCI6MjA2MzUxMTI0Nn0.B8VOgHggV-9m4xnyJStP0woKGbhaBE_gqJlzcWT-EZk");
     if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
     const out = await response.json();
     return out;
@@ -53,32 +48,7 @@ async function nextFunc(promisein) {
     promise.then((data) => {
         let count = 0;
         for(let i = 0 ; i < data.length ; i++) {
-            if(((data[i].Name).toLowerCase()).includes((document.getElementById('name').value).toLowerCase())){
-                newdiv(data[i]);
-                count = count + 1;
-            }
-        }
-        if(count == 0) {
-            document.getElementById("message").innerHTML = "No result found";
-        }
-        else {
-            document.getElementById("message").innerHTML = "Search successful";
-            
-        }
-    });
-}
-
-async function nextFunc2(promisein) {
-    const promise = promisein;
-    const elements = document.getElementsByClassName("newresultclass");
-    let elelen = elements.length;
-    for (let i = 0; i < elelen; i++) {
-        elements[0].remove();
-    }
-    promise.then((data) => {
-        let count = 0;
-        for(let i = 0 ; i < data.length ; i++) {
-            if(((data[i].LicenseNumber).toLowerCase()).includes((document.getElementById('license').value).toLowerCase())){
+            if(((data[i].VehicleID).toLowerCase()).includes((document.getElementById('rego').value).toLowerCase())){
                 newdiv(data[i]);
                 count = count + 1;
             }
@@ -95,10 +65,8 @@ async function nextFunc2(promisein) {
 </script>
 <main class="mainsec">
 <form>
-<label for="name">Search by driver name</label>
-<input type="text" id="name" value=""><br><br><br><br>
-<label for="license">Search by driving license number</label>
-<input type="text" id="license" value=""><br><br>
+<label for="rego">Registration number</label>
+<input type="text" id="rego" value=""><br><br><br><br>
 <input type="button" value="Submit" onclick="checktheboxes()">
 </form>
 <br>
